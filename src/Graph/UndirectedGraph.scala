@@ -4,9 +4,6 @@ import scala.collection.mutable._
 
 class UndirectedGraph(verticeC: Int) extends Graph {
   override val vertice: Int = verticeC
-  var edgeCount = 0
-  val graph = Array.ofDim[ListBuffer[Int]](vertice)
-
 
   override def addEdge(source: Int, dest: Int): Unit = {
     try {

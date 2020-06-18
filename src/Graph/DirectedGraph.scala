@@ -4,8 +4,6 @@ import scala.collection.mutable._
 
 class DirectedGraph(verticeC: Int) extends Graph {
   override val vertice: Int = verticeC
-  val graph = Array.ofDim[ListBuffer[Int]](vertice)
-  var edgeCount = 0
 
   override def addEdge(source: Int, dest: Int): Unit = {
     try {
@@ -65,6 +63,52 @@ class DirectedGraph(verticeC: Int) extends Graph {
     }
     toposortArr
   }
+
+  def reverse(graph: Array[ListBuffer[Int]]): Array[ListBuffer[Int]] = {
+    val reverseGraph = Array.ofDim[ListBuffer[Int]](vertice)
+    for (i <- 0 until vertice) {
+      graph(i).foreach(x => reverseGraph(x).prepend(i))
+    }
+    reverseGraph
+  }
+
+  def stronglyConnectedComponent(): Array[Int] = {
+    //Implement Kosaraju's algorithm
+    val visited = Array.fill[Int](vertice)(0)
+    val stack = new Stack[Int]
+    val sccArr = Array.ofDim[Int](vertice)
+    var sccNum = 0
+
+    //do DFS 1st time to push node to the stack
+    def dfsSCC(source: Int): Unit = {
+      visited(source) = 1
+      graph(source).foreach(x => if (visited(x) == 0) dfsSCC(x))
+      stack.push(source)
+    }
+
+    dfsSCC(0)
+
+    //reverse original graph:
+    val reverseGraph = reverse(graph)
+
+    //Dfs second round
+    for (i <- stack) {
+      sccNum += 1
+      dfsSCCReverse(i)
+    }
+
+
+    def dfsSCCReverse(source: Int): Unit = {
+      visited(source) = 0
+      reverseGraph(source).foreach(x => if (visited(x) == 1) dfsSCCReverse(x))
+      sccArr(source) = sccNum
+    }
+
+    sccArr
+  }
+
+
+
 
 
 }

@@ -4,13 +4,15 @@ import scala.collection.mutable._
 
 trait Graph {
   val vertice: Int
-  val graph: Array[ListBuffer[Int]]
+  val graph = Array.ofDim[ListBuffer[Int]](vertice)
+  var edgeCount = 0
 
   def addEdge(source: Int, dest: Int): Unit
 
   def graphCreate(adjListEdge: Array[(Int, Int)]): Array[List[Int]] = {
     for (i <- adjListEdge) {
       addEdge(i._1, i._2)
+      edgeCount += 1
     }
     val graphPrint = graph.map(x => x.toList)
     graphPrint
